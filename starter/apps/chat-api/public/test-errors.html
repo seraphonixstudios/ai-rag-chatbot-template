@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+  <head>
+    <title>AI Test Errors</title>
+    <link rel="stylesheet" href="/public/styles.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1>AI Test Errors</h1>
+      <div class="panel" style="margin-bottom:12px;">
+        <label>Code</label><input id="code" value="INTERNAL_ERROR" />
+        <label>Message</label><input id="msg" value="Simulated error" />
+        <label>Status</label><input id="status" value="400" />
+        <button id="trigger">Trigger</button>
+      </div>
+      <div class="panel" style="min-height:120px;">
+        <h3>Payload</h3>
+        <pre id="log" style="white-space: pre-wrap; max-height: 200px; overflow: auto;"></pre>
+      </div>
+      <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+    </div>
+    <script src="/public/toast.js"></script>
+    <script>
+      document.getElementById('trigger').addEventListener('click', async () => {
+        const code = document.getElementById('code').value;
+        const msg = document.getElementById('msg').value;
+        const status = document.getElementById('status').value;
+        try {
+          const r = await fetch(`/debug/error?code=${encodeURIComponent(code)}&message=${encodeURIComponent(msg)}&status=${encodeURIComponent(status)}`);
+          const data = await r.json();
+          document.getElementById('log').textContent = JSON.stringify(data, null, 2);
+          if (!r.ok) {
+            window.showToast(data?.error?.message || 'Error', 'error');
+          } else {
+            window.showToast('Error payload returned', 'success');
+          }
+        } catch (e) {
+          window.showToast('Network error', 'error');
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "name": "ai-ui-tests",
+  "private": true,
+  "devDependencies": {
+    "@playwright/test": "^1.35.0",
+    "playwright": "^1.35.0"
+  },
+  "scripts": {
+    "test-ui": "npx playwright test"
+  }
+}

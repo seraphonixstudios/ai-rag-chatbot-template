@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  chat-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chat-api
+    ports:
+      - "8000:8000"
+    environment:
+      - LOG_LEVEL=INFO
+      - ENVIRONMENT=development
+    volumes:
+      # Development: hot reload with watchdog
+      - ./apps/chat-api:/app:delegated
+      - /app/__pycache__
+    depends_on:
+      retrieval-service:
+        condition: service_started
+      llm-service:
+        condition: service_started
+    networks:
+      - rag-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/debug/success"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+  retrieval-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.retrieval
+    container_name: retrieval-service
+    environment:
+      - LOG_LEVEL=INFO
+      - ENVIRONMENT=development
+    volumes:
+      - ./:/app:delegated
+      - /app/__pycache__
+    networks:
+      - rag-network
+    restart: unless-stopped
+
+  llm-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.llm
+    container_name: llm-service
+    environment:
+      - LOG_LEVEL=INFO
+      - ENVIRONMENT=development
+    volumes:
+      - ./:/app:delegated
+      - /app/__pycache__
+    networks:
+      - rag-network
+    restart: unless-stopped
+
+networks:
+  rag-network:
+    driver: bridge
+
+volumes:
+  app-cache:
+    driver: local

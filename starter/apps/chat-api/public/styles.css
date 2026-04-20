@@ -1,0 +1,10 @@
+:root { --bg: #0f172a; --card: #111827; --text: #e5e7eb; --toast: #374151; }
+body { margin:0; font-family: Arial, sans-serif; background: #0b1020; color: #e5e7eb; }
+.container { width: 90%; max-width: 800px; margin: 40px auto; }
+.chat { display:flex; gap:8px; }
+textarea { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #374151; resize: vertical; }
+button { padding: 10px 16px; border-radius: 6px; border: none; background: #4f46e5; color: white; cursor: pointer; }
+#response { margin-top: 16px; padding: 12px; background: #111827; border-radius: 6px; border: 1px solid #374151; }
+.toast { position: fixed; right: 20px; bottom: 20px; min-width: 240px; background: var(--toast); color: white; padding: 12px; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,.2); margin-top: 8px; }
+.toast.success { background: #16a34a; }
+.toast.error { background: #dc2626; }

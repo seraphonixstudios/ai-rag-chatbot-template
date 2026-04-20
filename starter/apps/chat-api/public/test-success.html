@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+  <head>
+    <title>AI Test Success</title>
+    <link rel="stylesheet" href="/public/styles.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1>AI Test Success</h1>
+      <div class="panel" style="margin-bottom:12px;">
+        <button id="trigger">Trigger Success</button>
+      </div>
+      <div class="panel" style="min-height:120px;">
+        <h3>Payload</h3>
+        <pre id="log" style="white-space: pre-wrap; max-height: 200px; overflow: auto;"></pre>
+      </div>
+      <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+    </div>
+    <script src="/public/toast.js"></script>
+    <script>
+      document.getElementById('trigger').addEventListener('click', async () => {
+        try {
+          const r = await fetch('/debug/success');
+          const data = await r.json();
+          document.getElementById('log').textContent = JSON.stringify(data, null, 2);
+          if (!r.ok) {
+            window.showToast('Error', 'error');
+          } else {
+            window.showToast('Success payload returned', 'success');
+          }
+        } catch (e) {
+          window.showToast('Network error', 'error');
+        }
+      });
+    </script>
+  </body>
+</html>
